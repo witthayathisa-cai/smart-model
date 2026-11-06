@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="th">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>มหัศจรรย์คำคล้องจอง • SMART MODEL</title>
+<meta name="description" content="สวนการเรียนรู้ภาษาไทยสำหรับนักเรียนชั้นประถมศึกษาปีที่ 3">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Mali:wght@600;700&family=Prompt:wght@400;500;600;700&display=swap');
+
+    :root {
+        --purple: #65249a;
+        --gold: #f6c445;
+        --ink: #302044
+    }
+
+    * {
+        box-sizing: border-box
+    }
+
+    body {
+        margin: 0;
+        color: var(--ink);
+        font-family: Prompt, sans-serif;
+        background: #fff9ed url(background.png) center top/cover fixed no-repeat;
+        min-height: 100svh
+    }
+
+    button {
+        font: inherit;
+        cursor: pointer
+    }
+
+    button:focus-visible,
+    textarea:focus-visible {
+        outline: 4px solid #65249a;
+        outline-offset: 5px
+    }
+
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 5%;
+        gap: 16px
+    }
+
+    .brand {
+        font-weight: 700;
+        color: var(--purple)
+    }
+
+    .tag {
+        font-size: 14px;
+        background: #fff9eddd;
+        border: 1px solid #d9bbeb;
+        border-radius: 30px;
+        padding: 8px 16px
+    }
+
+    .sound {
+        border: 1px solid #d9bbeb;
+        background: #fff9ed;
+        border-radius: 30px;
+        padding: 10px 18px;
+        color: var(--purple)
+    }
+
+    main {
+        max-width: 1060px;
+        margin: 10px auto 0;
+        padding: 0 24px 190px;
+        text-align: center
+    }
+
+    .eyebrow {
+        font-size: 14px;
+        letter-spacing: 2px;
+        color: #76518e;
+        font-weight: 600
+    }
+
+    h1 {
+        font-family: Mali, cursive;
+        font-size: clamp(32px, 4.4vw, 56px);
+        line-height: 1.45;
+        color: #60258a;
+        margin: 18px 0 8px
+    }
+
+    h1 span {
+        display: block;
+        color: #925526;
+        font-size: .72em
+    }
+
+    .intro {
+        font-size: 18px;
+        margin: 16px auto 25px
+    }
+
+    .primary {
+        background: linear-gradient(#8540b5, #65249a);
+        color: #fff;
+        border: 2px solid var(--gold);
+        border-radius: 22px;
+        padding: 15px 30px;
+        box-shadow: 0 5px #451767;
+        font-weight: 600;
+        font-size: 22px
+    }
+
+    .primary:active {
+        transform: translateY(3px);
+        box-shadow: 0 2px #451767
+    }
+
+    .steps {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-top: 40px
+    }
+
+    .step {
+        position: relative;
+        border: 2px solid white;
+        border-radius: 25px;
+        padding: 22px 12px;
+        text-align: left;
+        box-shadow: 0 8px 22px #50236d18;
+        color: var(--ink);
+        transition: transform .2s;
+        background: var(--color)
+    }
+
+    .step:hover {
+        transform: translateY(-5px)
+    }
+
+    .letter {
+        font-size: 36px;
+        font-weight: 700;
+        display: block;
+        line-height: 1.1
+    }
+
+    .step strong {
+        display: block;
+        font-size: 17px;
+        margin: 14px 0 7px
+    }
+
+    .step small {
+        font-size: 13px
+    }
+
+    .section-label {
+        margin-top: 38px;
+        font-size: 20px
+    }
+
+    .note {
+        font-size: 13px;
+        color: #70577d;
+        margin-top: 20px
+    }
+
+    .panel {
+        background: #fffdf7f5;
+        border: 2px solid #eddaac;
+        border-radius: 28px;
+        padding: 28px;
+        text-align: left;
+        margin: 24px auto;
+        box-shadow: 0 10px 35px #50236d12
+    }
+
+    .panel h2 {
+        font-family: Mali;
+        margin-top: 0;
+        color: #65249a;
+        font-size: 28px
+    }
+
+    .panel p {
+        font-size: 20px
+    }
+
+    .choices {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap
+    }
+
+    .choice,
+    .secondary {
+        padding: 13px 22px;
+        min-height: 54px;
+        border: 2px solid #b792d0;
+        border-radius: 17px;
+        background: white;
+        color: #552080;
+        font-size: 20px
+    }
+
+    .choice[aria-pressed=true] {
+        background: #e9d6fa;
+        border-color: #65249a
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 110px;
+        border: 2px solid #cfb6df;
+        border-radius: 15px;
+        padding: 15px;
+        font: 20px Prompt;
+        margin: 10px 0
+    }
+
+    .feedback {
+        min-height: 30px;
+        font-weight: 600;
+        color: #532480
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 25px;
+        flex-wrap: wrap
+    }
+
+    .hidden {
+        display: none
+    }
+
+    .progress {
+        font-size: 14px;
+        color: #76518e
+    }
+
+    .top span {
+        white-space: nowrap
+    }
+
+    @media(max-width:760px) {
+        body {
+            background-size: auto 100svh;
+            background-attachment: scroll
+        }
+
+        .steps {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 22px
+        }
+
+        .step:last-child {
+            grid-column: 1/-1
+        }
+
+        .step {
+            padding: 16px
+        }
+
+        .letter {
+            font-size: 28px
+        }
+
+        .top {
+            padding: 15px
+        }
+
+        .tag {
+            display: none
+        }
+
+        main {
+            padding: 0 16px 170px
+        }
+
+        h1 {
+            margin-top: 14px
+        }
+
+        .intro {
+            font-size: 16px
+        }
+
+        .panel {
+            padding: 20px
+        }
+
+        .sound {
+            font-size: 13px
+        }
+
+        .section-label {
+            margin-top: 30px
+        }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+        * {
+            transition: none !important;
+            scroll-behavior: auto !important
+        }
+    }
+
+    /* ภาพตกแต่งมุมขวาล่าง */
+    .teacher-student {
+        position: fixed;
+        right: 12px;
+        bottom: 0;
+
+        width: clamp(200px, 22vw, 340px);
+        height: auto;
+
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    /* ยกเนื้อหาและปุ่มให้อยู่เหนือภาพ */
+    .top,
+    main {
+        position: relative;
+        z-index: 3;
+    }
+
+    /* ลดขนาดภาพบนแท็บเล็ต */
+    @media (max-width: 1024px) {
+        .teacher-student {
+            width: 220px;
+            right: 0;
+        }
+    }
+
+    /* บนมือถือ วางภาพต่อท้ายเนื้อหาเพื่อไม่บังบทเรียน */
+    @media (max-width: 600px) {
+        .teacher-student {
+            position: relative;
+            display: block;
+            width: 180px;
+            margin-left: auto;
+            right: auto;
+            bottom: auto;
+        }
+    }
+
+    /* ภาพตกแต่งมุมซ้ายล่าง */
+    .teacher-student-left {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+
+        width: clamp(220px, 18vw, 350px);
+        height: auto;
+        display: block;
+
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    /* ให้เนื้อหาและปุ่มอยู่เหนือภาพตกแต่ง */
+    .top,
+    main {
+        position: relative;
+        z-index: 3;
+    }
+
+    /* ลดขนาดเมื่อจอแคบลง */
+    @media (max-width: 1024px) {
+        .teacher-student-left {
+            width: 200px;
+        }
+    }
+
+    /* มือถือ: วางภาพต่อท้ายเนื้อหา ไม่ให้บังบทเรียน */
+    @media (max-width: 600px) {
+        .teacher-student-left {
+            position: relative;
+            width: 160px;
+            left: auto;
+            bottom: auto;
+            margin: 16px auto 0 0;
+        }
+    }
+
+    @media (max-width: 600px) {
+
+        .teacher-student,
+        .teacher-student-left {
+            position: fixed;
+            bottom: 0;
+
+            width: 40vw;
+            height: 140px;
+            max-width: 190px;
+
+            object-fit: contain;
+            object-position: bottom;
+            margin: 0;
+            display: block;
+
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* ภาพฝั่งซ้าย */
+        .teacher-student-left {
+            left: 0;
+            right: auto;
+            object-position: left bottom;
+        }
+
+        /* ภาพฝั่งขวา */
+        .teacher-student {
+            right: 0;
+            left: auto;
+            object-position: right bottom;
+        }
+    }
+
+    .brand {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        color: #65249A;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .brand-caption {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+        .brand-caption {
+            font-size: 11px;
+        }
+    }
+
+    .brand {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #FFFEF8, #FFF2CF);
+        border: 2px solid #F6C445;
+        border-radius: 18px;
+        box-shadow: 0 4px 10px rgba(101, 36, 154, 0.15);
+
+        color: #65249A;
+        font-weight: 700;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    .brand-caption {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+        .brand {
+            padding: 8px 12px;
+            border-radius: 14px;
+        }
+
+        .brand-caption {
+            font-size: 11px;
+        }
+    }
+
+    .brand {
+        position: relative;
+        top: 95px;
+    }
+
+    /* บนมือถือ เลื่อนลงน้อยลงเพื่อไม่ทับหัวข้อ */
+    @media (max-width: 600px) {
+        .brand {
+            top: 30px;
+        }
+    }
+
+    /* เลื่อนปุ่มฟังคำแนะนำลงให้เสมอกับกรอบ SMART MODEL */
+    .top .sound {
+        position: relative;
+        top: 95px;
+    }
+
+    /* มือถือ: ใช้ระยะเดียวกับกรอบ SMART MODEL */
+    @media (max-width: 600px) {
+        .top .sound {
+            top: 30px;
+        }
+    }
+
+    .creator-info {
+        margin: 8px auto 16px;
+        padding: 0 12px;
+        font-family: "Prompt", sans-serif;
+        font-size: clamp(12px, 1.1vw, 16px);
+        line-height: 1.6;
+        color: #65249A;
+        text-align: center;
+    }
+
+    .creator-info strong,
+    .creator-info span {
+        display: block;
+    }
+
+    .top .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 320px;
+        padding: 10px 16px;
+
+        font-size: 19px;
+        font-weight: 600;
+        line-height: 1.5;
+        text-align: center;
+
+        background: #FFF9ED;
+        color: #65249A;
+        border: 2px solid #F6C445;
+        border-radius: 30px;
+    }
+
+    /* คงการซ่อนป้ายบนมือถือ ตามรูปแบบเดิม */
+    @media (max-width: 760px) {
+        .top .tag {
+            display: none;
+        }
+    }
+
+    .header-actions {
+        position: relative;
+        top: 95px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    /* ยกเลิกการเลื่อนเฉพาะปุ่มจากโค้ดเดิม */
+    .top .header-actions .sound {
+        position: static;
+        top: auto;
+    }
+
+    .about-button {
+        padding: 10px 18px;
+        border: 1px solid #91C9E8;
+        border-radius: 30px;
+
+        background: #DDF3FF;
+        color: #65249A;
+        font-family: inherit;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .about-button:hover {
+        background: #C5E9FF;
+    }
+
+    .about-button:focus-visible {
+        outline: 3px solid #65249A;
+        outline-offset: 4px;
+    }
+
+    #about-dialog {
+        width: min(480px, 90vw);
+        padding: 28px;
+        border: 2px solid #F6C445;
+        border-radius: 24px;
+        background: #FFF9ED;
+        color: #65249A;
+        text-align: center;
+    }
+
+    #about-dialog::backdrop {
+        background: rgba(48, 32, 68, 0.45);
+    }
+
+    #about-dialog p {
+        line-height: 1.8;
+    }
+
+    @media (max-width: 600px) {
+        .header-actions {
+            top: 30px;
+            gap: 8px;
+        }
+
+        .about-button {
+            font-size: 13px;
+            padding: 10px 14px;
+        }
+    }
+
+    .creator-photo {
+        display: block;
+        width: min(200px, 100%);
+        height: auto;
+        margin: 16px auto 20px;
+
+        border: 3px solid #F6C445;
+        border-radius: 18px;
+        box-shadow: 0 4px 12px rgba(101, 36, 154, 0.15);
+    }
+
+    /* ให้เลื่อนดูได้เมื่อหน้าต่างสูงกว่าจอ */
+    #about-dialog {
+        max-height: 90vh;
+        max-height: 90dvh;
+        overflow-y: auto;
+    }
+
+    #about-dialog {
+        width: min(360px, 92vw);
+        padding: 20px 16px;
+        border-radius: 22px;
+    }
+
+    #about-dialog h2 {
+        margin: 8px 0 16px;
+    }
+
+    #about-dialog p {
+        margin: 16px 0;
+    }
+
+    .step-subtitle {
+        display: block;
+        margin-top: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: #65249A;
+    }
+
+    /* ขยับกรอบวิชาและระดับชั้นลง */
+    .top .tag {
+        position: relative;
+        top: 40px;
+    }
+
+    /* กรอบคำแนะนำเหนือการ์ดกิจกรรม */
+    .note.learning-hint {
+        width: fit-content;
+        max-width: 90%;
+        margin: 14px auto 0;
+        padding: 10px 20px;
+
+        background: #6d39cc;
+        border: 2px solid #f6c445;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px #65249a15;
+
+        color: #ffffff;
+        font-size: clamp(14px, 1.2vw, 17px);
+        font-weight: 600;
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    .steps {
+        margin-top: 22px;
+    }
+
+    /* ===== การ์ด SMART แบบสามมิติ ===== */
+
+    .steps.smart-coverflow {
+        --smart-card-width: clamp(185px, 25vw, 255px);
+        --smart-spacing: clamp(105px, 18vw, 205px);
+
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 300px;
+        margin: 20px auto 0;
+
+        perspective: 1100px;
+        isolation: isolate;
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    /* แทนรูปแบบการ์ดเดิมเฉพาะในชุดนี้ */
+    .steps.smart-coverflow .step {
+        position: absolute;
+        top: 22px;
+        left: 50%;
+
+        width: var(--smart-card-width);
+        min-height: 225px;
+        height: auto;
+        margin: 0;
+        padding: 24px 18px;
+        grid-column: auto;
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        border: 3px solid #ffffff;
+        border-radius: 26px;
+        background: var(--color);
+        color: #302044;
+        text-align: left;
+        font: inherit;
+        cursor: pointer;
+
+        box-shadow: 0 14px 28px #40205b25;
+        backface-visibility: hidden;
+
+        transform:
+            translateX(-50%) translateX(calc(var(--position) * var(--smart-spacing))) translateZ(var(--depth)) rotateY(var(--rotation)) scale(var(--scale));
+
+        transition:
+            transform 550ms cubic-bezier(.22, 1, .36, 1),
+            box-shadow 300ms,
+            border-color 300ms;
+    }
+
+    .steps.smart-coverflow .step.is-active {
+        border-color: #f6c445;
+        box-shadow:
+            0 20px 35px #40205b35,
+            0 0 0 4px #f6c44525;
+    }
+
+    .steps.smart-coverflow .step:focus-visible {
+        outline: 3px solid #65249a;
+        outline-offset: 5px;
+    }
+
+    .steps.smart-coverflow .letter {
+        display: block;
+        font-size: 46px;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    .steps.smart-coverflow .step strong {
+        display: block;
+        margin: 18px 0 8px;
+        font-size: 17px;
+        line-height: 1.5;
+    }
+
+    .steps.smart-coverflow .step small {
+        display: block;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .steps.smart-coverflow .step-subtitle {
+        display: block;
+        margin-top: 10px;
+        color: #65249a;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    /* แถบควบคุมใต้การ์ด */
+    .smart-controls {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        width: fit-content;
+        margin: 0 auto 12px;
+        padding: 8px 14px;
+
+        border: 2px solid #f6c445;
+        border-radius: 999px;
+        background: #fff9ed;
+        box-shadow: 0 6px 16px #65249a18;
+    }
+
+    .smart-controls button {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+
+        border: 0;
+        border-radius: 50%;
+        background: #65249a;
+        color: #ffffff;
+        font: inherit;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .smart-controls button:hover {
+        background: #8541be;
+    }
+
+    .smart-controls button:focus-visible {
+        outline: 3px solid #65249a;
+        outline-offset: 3px;
+    }
+
+    .smart-counter {
+        min-width: 58px;
+        color: #65249a;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .smart-caption {
+        margin: 8px auto 20px;
+        padding: 0 16px;
+        color: #65249a;
+        font-size: 14px;
+        line-height: 1.7;
+        text-align: center;
+    }
+
+    @media (max-width: 760px) {
+        .steps.smart-coverflow {
+            --smart-card-width: clamp(180px, 52vw, 230px);
+            --smart-spacing: clamp(90px, 25vw, 150px);
+            height: 290px;
+        }
+
+        .steps.smart-coverflow .step {
+            min-height: 220px;
+            padding: 22px 14px;
+        }
+
+        .steps.smart-coverflow .letter {
+            font-size: 40px;
+        }
+
+        .steps.smart-coverflow .step strong {
+            font-size: 16px;
+        }
+
+        .smart-caption {
+            font-size: 13px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .steps.smart-coverflow .step {
+            transition: none;
+        }
+    }
+
+    .smart-controls {
+        margin: 16px auto 0;
+    }
+
+    .smart-caption {
+        margin: 8px auto 0;
+    }
+
+    .steps.smart-coverflow {
+        margin-top: 8px;
+    }
+</style>
+<header class="top"><span class="brand">
+        <span class="brand-caption">รูปแบบการจัดการเรียนรู้</span>
+        <span>✦ SMART MODEL</span>
+    </span>
+    <span class="tag">ภาษาไทย • ชั้นประถมศึกษาปีที่ 3</span>
+    <div class="header-actions">
+        <button class="sound" id="speak">
+            🔊 ฟังคำแนะนำ
+        </button>
+
+        <button class="about-button" onclick="document.getElementById('about-dialog').showModal()">
+            👤 เกี่ยวกับผู้จัดทำ
+        </button>
+    </div>
+</header>
+<main>
+    <div id="home">
+        <h1>มหัศจรรย์คำคล้องจอง
+            <span>สร้างสรรค์คำขวัญ</span>
+        </h1>
+        <p class="learning-objective">
+            เพื่อพัฒนาความสามารถในการใช้คำคล้องจองและการแต่งคำขวัญเชิงสร้างสรรค์ของนักเรียนชั้นประถมศึกษาปีที่ 3
+        </p>
+        <p class="creator-info">
+            <strong>จัดทำโดย นางจิราภรณ์ กีฬา</strong>
+            <span>ตำแหน่ง ครู วิทยฐานะครูชำนาญการพิเศษ</span>
+            <span>โรงเรียนเทศบาลวัดกำแพง (อุดมพิทยากร)</span>
+        </p>
+        <h2 class="section-label">เลือกเส้นทางการเรียนรู้ของเรา</h2>
+        <p class="note learning-hint" id="status">S --> M --> A --> R --> T</p> 
+    </div>
+    <nav class="steps" aria-label="ขั้นตอน SMART"></nav>
+    <section id="activity" class="panel hidden" aria-live="polite"></section>
+</main>
+<script>
+    const steps = [{ l: 'S', title: 'ค้นพบเสียงสัมผัส', en: 'Sound Discovery', color: '#fbd3ec' }, { l: 'M', title: 'เชื่อมโยงความหมาย', en: 'Meaning Connection', color: '#ffe8a1' }, { l: 'A', title: 'สร้างสรรค์ภาษา', en: 'Active Creativity', color: '#d8efbd' }, { l: 'R', title: 'แต่งและปรับปรุง', en: 'Refine Writing', color: '#c9edf8' }, { l: 'T', title: 'ถ่ายทอดและสะท้อนผล', en: 'Transfer & Reflect', color: '#e5d4fa' }]; let current = 0; const panel = document.querySelector('#activity'); const drafts = { a: '', r: '', t: '' };
+
+    const nav = document.querySelector(".steps");
+
+    (() => {
+        const subtitles = {
+            S: "เปิดโลกคำคล้องจอง",
+            M: "นักสืบคำคล้องจอง",
+            A: "ห้องทดลองนักคิด",
+            R: "โรงงานสร้างคำขวัญ",
+            T: "เวทีดาวเด่น"
+        };
+
+        const pages = {
+            S: "SoundDiscovery.html",
+            M: "MeaningConnection.html",
+            A: "ActiveCreativity.html",
+            R: "RefineWriting.html",
+            T: "TransferReflect.html"
+        };
+
+        let selectedIndex = 0;
+        let gesture = null;
+        let suppressClickUntil = 0;
+
+        nav.innerHTML = "";
+        nav.classList.add("smart-coverflow");
+        nav.setAttribute("aria-label", "เลือกบทเรียน SMART MODEL");
+
+        const cards = steps.map((s, i) => {
+            const card = document.createElement("button");
+
+            card.type = "button";
+            card.className = "step";
+            card.style.setProperty("--color", s.color);
+
+            card.innerHTML = `
+            <span class="letter">${s.l}</span>
+            <strong>${s.title}</strong>
+            <small>${s.en}</small>
+            <span class="step-subtitle">
+                ${subtitles[s.l]}
+            </span>
+        `;
+
+            card.addEventListener("click", () => {
+                // ป้องกันการเปิดบทเรียนโดยไม่ตั้งใจหลังปัดการ์ด
+                if (performance.now() < suppressClickUntil) return;
+
+                if (i === selectedIndex) {
+                    window.location.href = pages[s.l];
+                } else {
+                    selectCard(i);
+                }
+            });
+
+            nav.appendChild(card);
+            return card;
+        });
+
+        // สร้างปุ่มควบคุมใต้ชุดการ์ด
+        const controls = document.createElement("div");
+
+        controls.className = "smart-controls";
+        controls.setAttribute("role", "group");
+        controls.setAttribute("aria-label", "ควบคุมการเลื่อนบทเรียน");
+
+        controls.innerHTML = `
+        <button type="button"
+                class="smart-prev"
+                aria-label="บทเรียนก่อนหน้า">‹</button>
+
+        <span class="smart-counter"
+              aria-live="polite"
+              aria-atomic="true"></span>
+
+        <button type="button"
+                class="smart-next"
+                aria-label="บทเรียนถัดไป">›</button>
+    `;
+
+        nav.insertAdjacentElement("beforebegin", controls);
+
+        const caption = document.createElement("p");
+        caption.className = "smart-caption";
+        caption.textContent =
+            "เลือกบทเรียนที่อยากรู้ แล้วจิ้มการ์ดตรงกลางเพื่อลุยกันเลยจ้า!";
+
+        controls.insertAdjacentElement("afterend", caption);
+
+        const counter = controls.querySelector(".smart-counter");
+
+        function selectCard(nextIndex) {
+            selectedIndex =
+                (nextIndex + steps.length) % steps.length;
+
+            cards.forEach((card, i) => {
+                let position =
+                    (i - selectedIndex + steps.length) % steps.length;
+
+                if (position > Math.floor(steps.length / 2)) {
+                    position -= steps.length;
+                }
+
+                const distance = Math.abs(position);
+                const active = position === 0;
+
+                card.style.setProperty("--position", position);
+                card.style.setProperty(
+                    "--depth",
+                    `${-distance * 110}px`
+                );
+                card.style.setProperty(
+                    "--rotation",
+                    `${-position * 20}deg`
+                );
+                card.style.setProperty(
+                    "--scale",
+                    1 - distance * 0.08
+                );
+
+                card.style.zIndex = String(10 - distance);
+                card.classList.toggle("is-active", active);
+                card.setAttribute(
+                    "aria-current",
+                    active ? "true" : "false"
+                );
+
+                card.setAttribute(
+                    "aria-label",
+                    active
+                        ? `เข้าเรียน ${steps[i].title}`
+                        : `เลือก ${steps[i].title}`
+                );
+            });
+
+            counter.textContent =
+                `${selectedIndex + 1} / ${steps.length}`;
+        }
+
+        controls.querySelector(".smart-prev")
+            .addEventListener("click", () => {
+                selectCard(selectedIndex - 1);
+            });
+
+        controls.querySelector(".smart-next")
+            .addEventListener("click", () => {
+                selectCard(selectedIndex + 1);
+            });
+
+        // ใช้ปุ่มลูกศรบนคีย์บอร์ด
+        nav.addEventListener("keydown", (event) => {
+            if (event.altKey || event.ctrlKey || event.metaKey) return;
+
+            let nextIndex;
+
+            if (event.key === "ArrowRight") {
+                nextIndex = selectedIndex + 1;
+            } else if (event.key === "ArrowLeft") {
+                nextIndex = selectedIndex - 1;
+            } else {
+                return;
+            }
+
+            event.preventDefault();
+            selectCard(nextIndex);
+            cards[selectedIndex].focus({ preventScroll: true });
+        });
+
+        // รองรับการลากด้วยเมาส์และปัดด้วยนิ้ว
+        nav.addEventListener("pointerdown", (event) => {
+            if (!event.isPrimary || event.button !== 0) return;
+
+            gesture = {
+                id: event.pointerId,
+                x: event.clientX,
+                y: event.clientY,
+                horizontal: false
+            };
+        });
+
+        nav.addEventListener("pointermove", (event) => {
+            if (!gesture || gesture.id !== event.pointerId) return;
+
+            const dx = event.clientX - gesture.x;
+            const dy = event.clientY - gesture.y;
+
+            // เลื่อนหน้าจอแนวตั้งได้ตามปกติ
+            if (!gesture.horizontal && Math.abs(dy) > 12 &&
+                Math.abs(dy) > Math.abs(dx)) {
+                gesture = null;
+                return;
+            }
+
+            if (!gesture.horizontal && Math.abs(dx) > 12) {
+                gesture.horizontal = true;
+                nav.setPointerCapture(event.pointerId);
+            }
+        });
+
+        function finishGesture(event, cancelled = false) {
+            if (!gesture || gesture.id !== event.pointerId) return;
+
+            const start = gesture;
+            gesture = null;
+
+            if (start.horizontal) {
+                const dx = event.clientX - start.x;
+
+                suppressClickUntil = performance.now() + 350;
+
+                if (!cancelled && Math.abs(dx) > 40) {
+                    selectCard(selectedIndex + (dx < 0 ? 1 : -1));
+                }
+            }
+
+            if (nav.hasPointerCapture(event.pointerId)) {
+                nav.releasePointerCapture(event.pointerId);
+            }
+        }
+
+        nav.addEventListener("pointerup", (event) => {
+            finishGesture(event);
+        });
+
+        nav.addEventListener("pointercancel", (event) => {
+            finishGesture(event, true);
+        });
+
+        nav.addEventListener("lostpointercapture", () => {
+            gesture = null;
+        });
+
+        // เริ่มต้นที่การ์ด S
+        selectCard(0);
+    })();
+
+    // ถัดจากตรงนี้ให้เป็น function openStep(i) เดิมของท่าน
+    function openStep(i) { current = i; const s = steps[i]; document.querySelectorAll('.step').forEach((b, j) => b.setAttribute('aria-current', j === i ? 'step' : 'false')); panel.classList.remove('hidden'); const bodies = [`<p>ลองอ่านหรือฟังคำว่า <b>“ดาว”</b> แล้วเลือกคำที่คล้องจองกัน</p><div class="choices"><button class="choice" data-answer="true">ขาว</button><button class="choice" data-answer="false">ดิน</button><button class="choice" data-answer="false">นก</button></div><p class="feedback" id="feedback"></p>`, `<p>คำขวัญ “ห้องเรียนสะอาด บรรยากาศสดใส” ชวนให้เราทำสิ่งใด?</p><div class="choices"><button class="choice" data-answer="true">ช่วยกันรักษาความสะอาด</button><button class="choice" data-answer="false">วิ่งเล่นในห้องเรียน</button></div><p class="feedback" id="feedback"></p>`, `<p>ลองคิดคำที่เกี่ยวกับ “โรงเรียนของเรา” อย่างน้อย 3 คำ แล้วจับคู่คำที่มีเสียงคล้องจอง</p><label for="draft">พื้นที่จินตนาการของฉัน</label><textarea id="draft" placeholder="เช่น เรียน — เพียร, ใส — ใจ"></textarea>`, `<p>นำคำที่คิดไว้มาแต่งคำขวัญสั้น ๆ แล้วอ่านทวน: ความหมายชัดเจนไหม? ใช้คำเหมาะสมไหม? มีคำคล้องจองไหม?</p><label for="draft">คำขวัญของฉัน</label><textarea id="draft" placeholder="เขียนและปรับปรุงคำขวัญที่นี่"></textarea>`, `<p>อ่านคำขวัญให้เพื่อนฟัง แล้วเล่าว่าเราชอบผลงานตรงไหน และอยากปรับปรุงอะไร</p><label for="draft">สิ่งที่ฉันได้เรียนรู้วันนี้</label><textarea id="draft" placeholder="วันนี้ฉันได้เรียนรู้ว่า…"></textarea>`]; panel.innerHTML = `<div class="progress">กิจกรรม ${i + 1} จาก 5 • ${s.en}</div><h2>${s.l} — ${s.title}</h2>${bodies[i]}<div class="actions"><button class="secondary" id="back">${i ? '← ย้อนกลับ' : '⌂ หน้าหลัก'}</button><button class="primary" id="next">${i < 4 ? 'กิจกรรมถัดไป →' : 'เรียนครบแล้ว ★'}</button></div>`; panel.querySelectorAll('[data-answer]').forEach(b => b.onclick = () => { panel.querySelectorAll('[data-answer]').forEach(c => c.setAttribute('aria-pressed', 'false')); b.setAttribute('aria-pressed', 'true'); document.querySelector('#feedback').textContent = b.dataset.answer === 'true' ? (i === 0 ? 'ถูกต้องค่ะ! ดาว — ขาว มีเสียงสระและตัวสะกดเหมือนกัน' : 'ถูกต้องค่ะ! คำขวัญนี้ชวนให้ช่วยกันรักษาความสะอาด') : 'ลองอีกครั้งนะคะ อ่านและคิดให้ดีอีกนิด'; }); const field = panel.querySelector('textarea'); if (field) { const key = ['', '', 'a', 'r', 't'][i]; field.value = drafts[key]; field.oninput = () => drafts[key] = field.value; } document.querySelector('#back').onclick = () => i ? openStep(i - 1) : home(); document.querySelector('#next').onclick = () => { if (i < 4) openStep(i + 1); else { home(); document.querySelector('#status').textContent = '★ เรียนครบทั้ง 5 ขั้นแล้ว! ลองนำคำขวัญของเราไปแบ่งปันกับเพื่อนนะคะ'; } }; panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+    // โค้ดกิจกรรม SMART เดิมอยู่ด้านบน เก็บไว้ทั้งหมด
+
+    // เสียงคำแนะนำ
+    const instructionAudio = new Audio("sounds/intro1sound1.mp3");
+    const instructionButton = document.querySelector("#speak");
+
+    instructionButton.onclick = async () => {
+        if (!instructionAudio.paused) {
+            instructionAudio.pause();
+            return;
+        }
+
+        try {
+            await instructionAudio.play();
+        } catch (error) {
+            console.error("เล่นเสียงไม่ได้:", error);
+
+            document.querySelector("#status").textContent =
+                "เล่นเสียงไม่ได้ กรุณาตรวจสอบไฟล์ sounds/intro1sound1.mp3";
+        }
+    };
+
+    instructionAudio.onplay = () => {
+        instructionButton.textContent = "⏸ หยุดชั่วคราว";
+    };
+
+    instructionAudio.onpause = () => {
+        instructionButton.textContent = "🔊 ฟังคำแนะนำ";
+    };
+
+    instructionAudio.onended = () => {
+        instructionAudio.currentTime = 0;
+        instructionButton.textContent = "🔊 ฟังคำแนะนำ";
+    };
+</script>
+<!-- ภาพคุณครูและนักเรียน มุมขวาล่าง -->
+<img src="teacher-student.png" alt="" class="teacher-student" aria-hidden="true">
+<!-- ภาพตกแต่งคุณครูและนักเรียน มุมซ้ายล่าง -->
+<img src="teacher-student1.png" alt="" class="teacher-student-left" aria-hidden="true">
+
+<<dialog id="about-dialog" aria-labelledby="about-title">
+    <h2 id="about-title">เกี่ยวกับผู้จัดทำ</h2>
+
+    <img src="creator.jpg" alt="นางจิราภรณ์ กีฬา ถ่ายภาพร่วมกับนักเรียน" class="creator-photo">
+
+    <p>
+        <strong>นางจิราภรณ์ กีฬา</strong><br>
+        ตำแหน่ง<br>
+        ครู วิทยฐานะครูชำนาญการพิเศษ<br>
+        โรงเรียนเทศบาลวัดกำแพง (อุดมพิทยากร)
+    </p>
+
+    <form method="dialog">
+        <button class="about-button">ปิดหน้าต่าง</button>
+    </form>
+    </dialog>
+    <audio id="instruction-audio" preload="metadata">
+        <source src="sounds/intro1sound1.mp3" type="audio/mpeg">
+    </audio>
+
+</html>

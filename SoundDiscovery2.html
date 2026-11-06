@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>เปิดโลกคำคล้องจอง</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 32px 16px;
+            font-family: "Prompt", sans-serif;
+            color: #302044;
+            background:
+                linear-gradient(#fff9ed66, #fff9edaa),
+                url("background.png") center / cover fixed;
+            background-color: #fff9ed;
+        }
+
+        .lesson {
+            width: min(960px, 100%);
+            margin: auto;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border: 2px solid #f6c445;
+            border-radius: 30px;
+            background: #fff9ed;
+            color: #65249a;
+            font-weight: 600;
+        }
+
+        h1 {
+            margin: 18px 0 8px;
+            color: #65249a;
+            font-size: clamp(26px, 5vw, 42px);
+        }
+
+        .instruction {
+            margin: 0 0 24px;
+            font-size: clamp(15px, 2vw, 18px);
+            line-height: 1.8;
+        }
+
+        .video-frame {
+            overflow: hidden;
+            border: 4px solid #f6c445;
+            border-radius: 24px;
+            background: #000000;
+            box-shadow: 0 14px 35px #65249a30;
+        }
+
+        .video-frame iframe {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: 0;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 26px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 52px;
+            padding: 12px 24px;
+            border: 2px solid #f6c445;
+            border-radius: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+        }
+
+        .button:focus-visible {
+            outline: 3px solid #65249a;
+            outline-offset: 5px;
+        }
+
+        .button-back {
+            background: #fff9ed;
+            color: #65249a;
+        }
+
+        .button-next {
+            background: #752db0;
+            color: #ffffff;
+            box-shadow: 0 4px 0 #4e1777;
+        }
+
+        .video-help {
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .video-help a {
+            color: #65249a;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 12px;
+            }
+
+            .video-frame {
+                border-radius: 16px;
+            }
+
+            .actions {
+                gap: 12px;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .button {
+                transition: none;
+            }
+        }
+
+        #teacher-dialog {
+            width: min(820px, calc(100% - 28px));
+            max-height: 92vh;
+            max-height: 92dvh;
+            padding: 24px;
+            overflow: auto;
+
+            border: 3px solid #f6c445;
+            border-radius: 28px;
+            background: #fff9ed;
+            color: #302044;
+            box-shadow: 0 20px 70px #30204455;
+        }
+
+        #teacher-dialog::backdrop {
+            background: #30204499;
+            backdrop-filter: blur(5px);
+        }
+
+        .teacher-layout {
+            display: grid;
+            grid-template-columns: 200px minmax(0, 1fr);
+            align-items: center;
+            gap: 24px;
+        }
+
+        .teacher-image {
+            display: block;
+            width: 100%;
+            max-height: 420px;
+            object-fit: contain;
+        }
+
+        .teacher-content {
+            text-align: center;
+        }
+
+        .teacher-content h2 {
+            margin: 0 0 16px;
+            color: #65249a;
+        }
+
+        .teacher-message {
+            font-size: 18px;
+            line-height: 1.9;
+        }
+
+        .teacher-message strong {
+            color: #752db0;
+        }
+
+        .teacher-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .teacher-actions button {
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .voice-button {
+            padding: 10px 18px;
+            border: 1px solid #91c9e8;
+            border-radius: 24px;
+            background: #ddf3ff;
+            color: #65249a;
+        }
+
+        .audio-status {
+            margin: 0;
+            font-size: 13px;
+            color: #765c89;
+        }
+
+        @media (max-width: 600px) {
+            .teacher-layout {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .teacher-image {
+                width: 110px;
+                max-height: 220px;
+                margin: auto;
+            }
+
+            .teacher-message {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="lesson">
+        <span class="badge">
+            S — ค้นพบเสียงสัมผัส
+        </span>
+
+        <h1>เปิดโลกคำคล้องจอง</h1>
+
+        <p class="instruction">
+            เด็ก ๆ กดเล่นเพลง แล้วตั้งใจฟังว่า
+            มีคำไหนบ้างที่มีเสียงคล้องจองกัน 🎵
+        </p>
+
+        <!-- คลิป YouTube ฝังอยู่ในหน้าบทเรียน -->
+        <div class="video-frame">
+            <iframe src="https://www.youtube-nocookie.com/embed/e63zlJQtbFM?rel=0&playsinline=1"
+                title="เปิดโลกคำคล้องจอง ตอนที่ 2"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+
+        <!-- ปุ่มนำทาง -->
+        <nav class="actions" aria-label="นำทางบทเรียน">
+            <a href="SoundDiscovery.html" class="button button-back">
+                ← ย้อนกลับ
+            </a>
+
+            <a href="index.html" class="button button-back">
+                กลับหน้าหลัก
+            </a>
+
+            <a href="SoundDiscovery3.html" class="button button-next">
+                หน้าถัดไป →
+            </a>
+        </nav>
+
+        <p class="video-help">
+            หากคลิปไม่แสดง
+            <a href="https://youtu.be/e63zlJQtbFM" target="_blank" rel="noopener noreferrer">
+                เปิดดูบน YouTube
+            </a>
+        </p>
+    </main>
+    <dialog id="teacher-dialog" aria-labelledby="teacher-title" aria-describedby="teacher-message">
+        <div class="teacher-layout">
+            <img class="teacher-image" src="teacher-1.png" alt="คุณครูแนะนำภารกิจคำคล้องจอง">
+
+            <div class="teacher-content">
+                <h2 id="teacher-title">ไขความลับคำคล้องจอง </h2>
+
+                <p class="teacher-message" id="teacher-message">
+                    เด็ก ๆ คะ เพลงจบแล้ว มาช่วยกันไขปริศนากันดีกว่า
+                    <strong>“อะไรทำให้คำเหล่านี้คล้องจองกัน?”</strong>
+                    ถ้าพร้อมแล้ว <strong>“ไปร่วมค้นหาคำตอบพร้อมๆ”</strong>
+                    กันเลยค่ะ!”
+                </p>
+
+                <div class="teacher-actions">
+                    <button type="button" class="voice-button" id="play-narration">
+                        🔊 ฟังเสียงบรรยาย
+                    </button>
+
+                    <p class="audio-status" id="audio-status" role="status"></p>
+
+                    <button type="button" class="button button-next" id="start-song">
+                        ถ้าพร้อมแล้วไปฟังกันเลย! 🎵
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <audio id="teacher-audio" preload="auto">
+        <source src="sounds/SoundPart1-popup2.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+        const introDialog = document.querySelector("#teacher-dialog");
+        const teacherAudio = document.querySelector("#teacher-audio");
+        const voiceButton = document.querySelector("#play-narration");
+        const audioMessage = document.querySelector("#audio-status");
+
+        async function playTeacherAudio() {
+            try {
+                await teacherAudio.play();
+                audioMessage.textContent = "";
+            } catch (error) {
+                audioMessage.textContent =
+                    "กดปุ่มฟังเสียงบรรยายเพื่อเริ่มฟังค่ะ";
+            }
+        }
+
+        function stopTeacherAudio() {
+            teacherAudio.pause();
+            teacherAudio.currentTime = 0;
+        }
+
+        voiceButton.addEventListener("click", () => {
+            if (teacherAudio.paused) {
+                playTeacherAudio();
+            } else {
+                teacherAudio.pause();
+            }
+        });
+
+        teacherAudio.addEventListener("play", () => {
+            voiceButton.textContent = "⏸ หยุดเสียงชั่วคราว";
+        });
+
+        teacherAudio.addEventListener("pause", () => {
+            voiceButton.textContent = "🔊 ฟังเสียงบรรยาย";
+        });
+
+        teacherAudio.addEventListener("ended", () => {
+            voiceButton.textContent = "🔊 ฟังอีกครั้ง";
+        });
+
+        teacherAudio.addEventListener("error", () => {
+            audioMessage.textContent =
+                "ไม่พบเสียง กรุณาตรวจสอบไฟล์ sound/ขบวนการคำคล้องจอง.mp3";
+        });
+
+        introDialog.addEventListener("close", stopTeacherAudio);
+        introDialog.addEventListener("cancel", stopTeacherAudio);
+
+        document.querySelector("#start-song")
+            .addEventListener("click", () => {
+                stopTeacherAudio();
+                introDialog.close();
+
+                const video = document.querySelector(".video-frame");
+
+                video.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+
+                video.querySelector("iframe").focus();
+            });
+
+        // เปิดป๊อปอัพทันทีเมื่อเข้าหน้านี้
+        introDialog.showModal();
+        playTeacherAudio();
+    </script>
+</body>
+
+</html>

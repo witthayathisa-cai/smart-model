@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>จับคู่เสียงเพื่อนซี้ — เกมคำคล้องจอง</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px 14px;
+            min-height: 100vh;
+            font-family: Tahoma, sans-serif;
+            color: #293653;
+
+            /* ภาพพื้นหลัง */
+            background-color: #fff8ec;
+            background-image: url("background.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .game {
+            max-width: 900px;
+            margin: auto;
+            padding: 28px;
+
+            /* กรอบโปร่งแสง เพื่อให้เห็นฉากด้านหลัง */
+            background: rgba(255, 255, 255, 0.82);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 28px;
+            box-shadow: 0 12px 40px rgba(95, 72, 35, 0.15);
+        }
+
+        header {
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 16px;
+            border-radius: 30px;
+            background: #fff1c7;
+            color: #795514;
+            font-size: 15px;
+        }
+
+        h1 {
+            margin: 16px 0 10px;
+            font-size: clamp(25px, 5vw, 38px);
+            color: #6446b5;
+        }
+
+        .instructions {
+            margin: 0;
+            line-height: 1.8;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 24px 0;
+        }
+
+        .stat {
+            padding: 12px 18px;
+            border-radius: 14px;
+            background: #f3f1ff;
+            font-weight: bold;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .column-title {
+            margin: 0 0 12px;
+            text-align: center;
+            font-weight: bold;
+            color: #646b83;
+        }
+
+        .cards {
+            display: grid;
+            gap: 12px;
+        }
+
+        .card {
+            width: 100%;
+            min-height: 68px;
+            padding: 12px;
+            border: 3px solid #d9e7fb;
+            border-radius: 17px;
+            background: #f1f7ff;
+            color: #293653;
+            font-size: clamp(23px, 4vw, 30px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform .15s, background .15s, border-color .15s;
+        }
+
+        .right .card {
+            background: #fff4f8;
+            border-color: #f5dce8;
+        }
+
+        .card:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .card:focus-visible,
+        .restart:focus-visible {
+            outline: 4px solid #8561d7;
+            outline-offset: 4px;
+        }
+
+        .card.selected {
+            border-color: #8a60d5;
+            background: #eee5ff;
+            box-shadow: 0 0 0 3px #8a60d526;
+        }
+
+        .card.matched {
+            border-color: #6bc5a0;
+            background: #e4f8ec;
+            color: #24694b;
+            cursor: default;
+        }
+
+        .card.wrong {
+            border-color: #ec7d86;
+            background: #ffe4e8;
+            animation: shake .25s;
+        }
+
+        @keyframes shake {
+
+            25%,
+            75% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+        }
+
+        .message {
+            min-height: 58px;
+            margin: 22px 0 14px;
+            text-align: center;
+            line-height: 1.7;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .actions {
+            text-align: center;
+        }
+
+        .restart {
+            padding: 13px 26px;
+            border: none;
+            border-radius: 16px;
+            background: #7050b5;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tip {
+            margin: 22px 0 0;
+            padding: 14px;
+            border-radius: 14px;
+            background: #fffae9;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 12px 8px;
+            }
+
+            .game {
+                padding: 20px 12px;
+            }
+
+            .board {
+                gap: 12px;
+            }
+
+            .stat {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+
+            .card {
+                min-height: 62px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .card {
+                transition: none;
+                animation: none !important;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 12px 8px;
+                background-attachment: scroll;
+            }
+
+            .game {
+                padding: 20px 12px;
+            }
+        }
+
+        /* ===== รูปแบบ Claymorphism ===== */
+
+        /* พื้นหลังของหน้า */
+        body {
+            background: #fff8ec url("background.png") center / cover no-repeat fixed;
+        }
+
+        /* กรอบเกม */
+        .game {
+            background: rgba(255, 250, 240, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 32px;
+
+            box-shadow:
+                10px 12px 28px rgba(105, 85, 55, 0.16),
+                inset 4px 4px 8px rgba(255, 255, 255, 0.9),
+                inset -4px -4px 8px rgba(205, 185, 155, 0.15);
+        }
+
+        /* บัตรคำฝั่งซ้าย */
+        .card {
+            border: 3px solid transparent;
+            border-radius: 24px;
+            background: #deecff;
+            color: #263858;
+
+            box-shadow:
+                5px 6px 10px rgba(83, 113, 157, 0.16),
+                inset 4px 4px 7px rgba(255, 255, 255, 0.9),
+                inset -4px -4px 7px rgba(116, 151, 198, 0.25);
+
+            transition:
+                transform 0.15s,
+                background 0.15s,
+                box-shadow 0.15s;
+        }
+
+        /* บัตรคำฝั่งขวา */
+        .right .card {
+            background: #ffe3ee;
+            border-color: transparent;
+
+            box-shadow:
+                5px 6px 10px rgba(157, 88, 118, 0.14),
+                inset 4px 4px 7px rgba(255, 255, 255, 0.9),
+                inset -4px -4px 7px rgba(210, 137, 167, 0.24);
+        }
+
+        /* เมื่อชี้เมาส์ */
+        .card:hover:not(:disabled) {
+            transform: translateY(-3px);
+        }
+
+        /* เมื่อเลือกบัตรคำ */
+        .card.selected,
+        .right .card.selected {
+            background: #ece0ff;
+            border-color: #8456c6;
+            transform: translateY(2px);
+
+            box-shadow:
+                2px 2px 5px rgba(106, 76, 153, 0.16),
+                inset 3px 3px 7px rgba(132, 86, 198, 0.2),
+                inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+        }
+
+        /* เมื่อจับคู่ถูก */
+        .card.matched,
+        .right .card.matched {
+            background: #dcf5e4;
+            border-color: #4c9c71;
+            color: #245b3b;
+            transform: none;
+
+            box-shadow:
+                3px 4px 8px rgba(64, 130, 88, 0.12),
+                inset 4px 4px 7px rgba(255, 255, 255, 0.85),
+                inset -4px -4px 7px rgba(110, 179, 133, 0.2);
+        }
+
+        /* เมื่อจับคู่ผิด */
+        .card.wrong,
+        .right .card.wrong {
+            background: #ffe1e4;
+            border-color: #d85768;
+            color: #852b39;
+        }
+
+        /* กล่องคะแนน จำนวนครั้ง และเวลา */
+        .stat {
+            background: #eee5ff;
+            border-radius: 18px;
+            color: #50377a;
+
+            box-shadow:
+                3px 4px 8px rgba(109, 85, 148, 0.1),
+                inset 3px 3px 5px rgba(255, 255, 255, 0.9),
+                inset -3px -3px 5px rgba(167, 143, 204, 0.2);
+        }
+
+        /* ปุ่มเริ่มใหม่ */
+        .restart {
+            background: #e3d4ff;
+            color: #49306e;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+
+            box-shadow:
+                5px 6px 10px rgba(104, 76, 146, 0.2),
+                inset 4px 4px 6px rgba(255, 255, 255, 0.8),
+                inset -4px -4px 6px rgba(155, 120, 204, 0.25);
+
+            cursor: pointer;
+        }
+
+        .restart:active {
+            transform: translateY(3px);
+
+            box-shadow:
+                1px 2px 4px rgba(104, 76, 146, 0.16),
+                inset 3px 3px 6px rgba(155, 120, 204, 0.25);
+        }
+
+        /* มือถือ */
+        @media (max-width: 520px) {
+            body {
+                background-attachment: scroll;
+            }
+
+            .game {
+                border-radius: 24px;
+            }
+
+            .card {
+                border-radius: 18px;
+            }
+        }
+
+        /* ลดการเคลื่อนไหวตามการตั้งค่าอุปกรณ์ */
+        @media (prefers-reduced-motion: reduce) {
+
+            .card,
+            .restart {
+                transition: none;
+                animation: none !important;
+            }
+
+            .card:hover:not(:disabled),
+            .card.selected,
+            .restart:active {
+                transform: none;
+            }
+        }
+
+        /* ฟอนต์เดียวกันทั้งหน้า รวมปุ่มและบัตรคำ */
+        body,
+        button,
+        a,
+        input,
+        select,
+        textarea {
+            font-family: "Kanit", sans-serif;
+        }
+
+        h1 {
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .instructions,
+        .column-title,
+        .tip {
+            font-weight: 400;
+        }
+
+        .card {
+            font-weight: 600;
+        }
+
+        /* กลุ่มปุ่มเปลี่ยนหน้า */
+        .page-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 46px;
+            padding: 10px 22px;
+
+            background: #fffaf0;
+            border: 1.5px solid #edb539;
+            border-radius: 15px;
+
+            color: #7525ac;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+
+            box-shadow: 0 3px 0 rgba(210, 162, 53, 0.16);
+            transition: transform 0.15s, background 0.15s;
+        }
+
+        .nav-button.next {
+            background: #7929b4;
+            border-color: #edb539;
+            color: #ffffff;
+            box-shadow: 0 4px 0 #501876;
+        }
+
+        .nav-button:hover {
+            background: #fff0d0;
+            transform: translateY(-2px);
+        }
+
+        .nav-button.next:hover {
+            background: #68209f;
+        }
+
+        .nav-button:active {
+            transform: translateY(2px);
+        }
+
+        .nav-button:focus-visible {
+            outline: 3px solid #8456c6;
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 520px) {
+            .page-navigation {
+                gap: 10px;
+            }
+
+            .nav-button {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .nav-button {
+                transition: none;
+                transform: none;
+            }
+        }
+
+        .card,
+        .right .card {
+            font-weight: 400;
+        }
+
+        .tip {
+            max-width: 720px;
+            margin: 16px auto 0;
+            padding: 12px 16px;
+            text-align: center;
+            font-weight: 200;
+            line-height: 1.8;
+        }
+
+        .tip {
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .message {
+            min-height: 0;
+            margin: 0 0 16px;
+            text-align: center;
+        }
+
+        .page-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 10px 18px;
+            border: 1.5px solid #eead24;
+            border-radius: 14px;
+            background: #fffaf0;
+            color: #65239d;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .nav-button.next {
+            background: #7525ac;
+            color: #ffffff;
+            box-shadow: 0 3px 0 #48166c;
+        }
+
+        .nav-button:hover {
+            background: #fff0d1;
+        }
+
+        .nav-button.next:hover {
+            background: #60208e;
+        }
+
+        .nav-button:focus-visible {
+            outline: 3px solid #8456c6;
+            outline-offset: 3px;
+        }
+
+        /* ภาพซ้าย — คะแนนและข้อความ — ภาพขวา */
+        .game-intro {
+            display: grid;
+            grid-template-columns: minmax(0, 140px) minmax(0, 1fr) minmax(0, 140px);
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .intro-picture {
+            display: block;
+            width: 100%;
+            max-height: 155px;
+            object-fit: contain;
+        }
+
+        .intro-center {
+            min-width: 0;
+            text-align: center;
+        }
+
+        .game-intro .stats {
+            margin: 0 0 16px;
+            gap: 8px;
+        }
+
+        .game-intro .message {
+            margin: 0;
+            min-height: 0;
+        }
+
+        /* ปรับภาพให้เล็กลงบนมือถือ */
+        @media (max-width: 600px) {
+            .game-intro {
+                grid-template-columns: 65px minmax(0, 1fr) 65px;
+                gap: 6px;
+            }
+
+            .intro-picture {
+                max-height: 100px;
+            }
+
+            .game-intro .stat {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .game-intro .message {
+                font-size: 14px;
+            }
+        }
+
+        img[src="teacher-student5.png"] {
+            display: block;
+            position: static;
+            float: none;
+            grid-column: 1 / -1;
+            justify-self: center;
+            width: 140px;
+            max-width: 100%;
+            height: auto;
+            margin: 12px auto 20px;
+        }
+
+        /* ลดช่องว่างใต้ข้อความอธิบาย */
+        .tip {
+            margin-bottom: 0;
+            padding-bottom: 4px;
+        }
+
+        /* ลดช่องว่างรอบภาพ */
+        img[src="teacher-student5.png"] {
+            display: block;
+            width: 140px;
+            height: auto;
+            margin: 4px auto;
+        }
+
+        /* ลดช่องว่างของกรอบที่ครอบภาพและคะแนน */
+        .game-intro {
+            margin-top: 0;
+            margin-bottom: 12px;
+            row-gap: 4px;
+        }
+
+        /* ให้กล่องคะแนนชิดภาพมากขึ้น */
+        .stats,
+        .game-intro .stats {
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+
+        header {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .instructions {
+            margin-bottom: 0;
+        }
+
+        .tip {
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        img[src="teacher-student5.png"] {
+            margin-bottom: 0;
+        }
+
+        .game-intro {
+            row-gap: 0;
+        }
+
+        .intro-center {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .stats,
+        .game-intro .stats {
+            margin-top: 0;
+        }
+    </style>
+    <!-- โหลดฟอนต์ภาษาไทย Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <main class="game">
+        <header>
+            <span class="badge">ภารกิจคำคล้องจอง</span>
+            <h1>จับคู่เสียงเพื่อนซี้</h1>
+            <p class="instructions">
+                เลือกคำจากฝั่งซ้ายและฝั่งขวาที่มีเสียงคล้องจองกัน<br>
+                อ่านออกเสียงก่อนจับคู่ด้วยนะคะ
+            </p>
+            <!-- ข้อความอธิบาย ย้ายมาไว้เหนือกล่องคะแนน -->
+            <p class="tip">
+                💡 คำคล้องจองมีเสียงสระเหมือนกัน
+                ถ้ามีตัวสะกด ต้องมีเสียงตัวสะกดเหมือนกันด้วย
+                โดยเสียงวรรณยุกต์ต่างกันได้ เช่น จาน–งาน และ ลุง–ถุง
+            </p>
+            <div class="game-intro">
+
+                <!-- ภาพตำแหน่งหมายเลข 1 -->
+                <img src="teacher-student5.png" class="intro-picture" alt="">
+
+                <div class="intro-center">
+                    <section class="stats" aria-label="ผลการเล่น">
+        </header>
+
+        <section class="stats" aria-label="ผลการเล่น">
+            <div class="stat">⭐ สำเร็จ <span id="score">0</span>/<span id="total">0</span> คู่</div>
+            <div class="stat">🎯 ลองจับคู่ <span id="attempts">0</span> ครั้ง</div>
+            <div class="stat">⏱️ <span id="time">00:00</span></div>
+        </section>
+        <p id="message" class="message" role="status" aria-live="polite">
+            พร้อมแล้ว เลือกคำคู่แรกได้เลย!
+        </p>
+        </div>
+        <section class="board" aria-label="บัตรคำจับคู่">
+            <div>
+                <p class="column-title">คำฝั่งซ้าย</p>
+                <div id="left" class="cards"></div>
+            </div>
+
+            <div class="right">
+                <p class="column-title">คำฝั่งขวา</p>
+                <div id="right" class="cards"></div>
+            </div>
+        </section>
+
+
+
+        <div class="actions">
+            <button id="restart" class="restart" type="button">↻ เริ่มใหม่</button>
+        </div>
+        <nav class="page-navigation" aria-label="เมนูเปลี่ยนหน้า">
+            <a href="SoundDiscovery2.html" class="nav-button">
+                ← ย้อนกลับ
+            </a>
+
+            <a href="index.html" class="nav-button">
+                กลับหน้าหลัก
+            </a>
+
+            <a href="SoundDiscovery4.html" class="nav-button next">
+                หน้าถัดไป →
+            </a>
+        </nav>
+
+
+    </main>
+
+    <script>
+        // แก้ไขหรือเพิ่มคู่คำได้ตรงนี้
+        // ในหนึ่งรอบควรใช้คู่คำที่ไม่ทำให้มีคำตอบถูกได้หลายคู่
+        const pairs = [
+            { left: "จาน", right: "งาน" },
+            { left: "ยืน", right: "คืน" },
+            { left: "ลุง", right: "ถุง" },
+            { left: "ตัว", right: "หัว" },
+            { left: "ดม", right: "จม" },
+            { left: "แมว", right: "แนว" }
+        ];
+
+        const $ = id => document.getElementById(id);
+
+        let selected = { left: null, right: null };
+        let score = 0;
+        let attempts = 0;
+        let locked = false;
+        let timer = null;
+        let startedAt = null;
+        let feedbackTimer = null;
+
+        function shuffle(items) {
+            const result = [...items];
+
+            for (let i = result.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [result[i], result[j]] = [result[j], result[i]];
+            }
+
+            return result;
+        }
+
+        function updateTime() {
+            const seconds = Math.floor((Date.now() - startedAt) / 1000);
+            const minutesText = String(Math.floor(seconds / 60)).padStart(2, "0");
+            const secondsText = String(seconds % 60).padStart(2, "0");
+
+            $("time").textContent = `${minutesText}:${secondsText}`;
+        }
+
+        function startTimer() {
+            if (startedAt !== null) return;
+
+            startedAt = Date.now();
+            timer = setInterval(updateTime, 1000);
+        }
+
+        function createColumn(side) {
+            $("left").setAttribute("aria-label", "คำฝั่งซ้าย");
+            $("right").setAttribute("aria-label", "คำฝั่งขวา");
+
+            const cards = shuffle(
+                pairs.map((pair, id) => ({ id, word: pair[side] }))
+            );
+
+            cards.forEach(item => {
+                const button = document.createElement("button");
+
+                button.type = "button";
+                button.className = "card";
+                button.textContent = item.word;
+                button.dataset.pair = item.id;
+                button.setAttribute("aria-pressed", "false");
+
+                button.addEventListener("click", () => selectCard(side, button));
+                $(side).appendChild(button);
+            });
+        }
+
+        function clearSelection() {
+            for (const side of ["left", "right"]) {
+                const button = selected[side];
+
+                if (button) {
+                    button.classList.remove("selected", "wrong");
+                    button.setAttribute("aria-pressed", "false");
+                }
+            }
+
+            selected = { left: null, right: null };
+        }
+
+        function selectCard(side, button) {
+            if (locked || button.disabled) return;
+
+            startTimer();
+
+            // กดคำเดิมซ้ำเพื่อยกเลิกการเลือก
+            if (selected[side] === button) {
+                button.classList.remove("selected");
+                button.setAttribute("aria-pressed", "false");
+                selected[side] = null;
+                return;
+            }
+
+            // เปลี่ยนคำที่เลือกในฝั่งเดียวกัน
+            if (selected[side]) {
+                selected[side].classList.remove("selected");
+                selected[side].setAttribute("aria-pressed", "false");
+            }
+
+            selected[side] = button;
+            button.classList.add("selected");
+            button.setAttribute("aria-pressed", "true");
+
+            if (selected.left && selected.right) checkPair();
+        }
+
+        function checkPair() {
+            locked = true;
+            attempts++;
+            $("attempts").textContent = attempts;
+
+            const left = selected.left;
+            const right = selected.right;
+            const correct = left.dataset.pair === right.dataset.pair;
+
+            if (correct) {
+                playSuccessSound(); // เพิ่มบรรทัดนี้
+                score++;
+                $("score").textContent = score;
+                $("message").textContent =
+                    `✓ ${left.textContent}–${right.textContent} คล้องจองกัน เก่งมากค่ะ!`;
+
+                clearSelection();
+
+                [left, right].forEach(button => {
+                    button.classList.add("matched");
+                    button.textContent += " ✓";
+                    button.disabled = true;
+                });
+
+                locked = false;
+
+                if (score === pairs.length) {
+                    updateTime();
+                    clearInterval(timer);
+
+                    $("message").textContent =
+                        `🏆 ภารกิจสำเร็จ! จับคู่ครบ ${score} คู่ ` +
+                        `ลองทั้งหมด ${attempts} ครั้ง ใช้เวลา ${$("time").textContent}`;
+                }
+            } else {
+                left.classList.add("wrong");
+                right.classList.add("wrong");
+
+                $("message").textContent =
+                    "ยังไม่คล้องจองกัน ลองอ่านออกเสียง แล้วเลือกใหม่ค่ะ";
+
+                feedbackTimer = setTimeout(() => {
+                    clearSelection();
+                    locked = false;
+                }, 900);
+            }
+        }
+
+        function resetGame() {
+            clearInterval(timer);
+            clearTimeout(feedbackTimer);
+
+            selected = { left: null, right: null };
+            score = 0;
+            attempts = 0;
+            locked = false;
+            timer = null;
+            startedAt = null;
+
+            $("score").textContent = "0";
+            $("total").textContent = pairs.length;
+            $("attempts").textContent = "0";
+            $("time").textContent = "00:00";
+            $("message").textContent = "พร้อมแล้ว เลือกคำคู่แรกได้เลย!";
+
+            $("left").replaceChildren();
+            $("right").replaceChildren();
+
+            createColumn("left");
+            createColumn("right");
+        }
+
+        $("restart").addEventListener("click", resetGame);
+        resetGame();
+    </script>
+    <script>
+        // สร้างเสียงคลิกสั้น ๆ
+        let clickAudioContext;
+
+        function playClickSound() {
+            const AudioContextClass =
+                window.AudioContext || window.webkitAudioContext;
+
+            if (!AudioContextClass) return;
+
+            clickAudioContext ??= new AudioContextClass();
+
+            const play = () => {
+                const oscillator = clickAudioContext.createOscillator();
+                const volume = clickAudioContext.createGain();
+                const now = clickAudioContext.currentTime;
+
+                oscillator.type = "sine";
+                oscillator.frequency.setValueAtTime(700, now);
+                oscillator.frequency.exponentialRampToValueAtTime(
+                    350, now + 0.09
+                );
+
+                volume.gain.setValueAtTime(0.0001, now);
+                volume.gain.exponentialRampToValueAtTime(0.15, now + 0.008);
+                volume.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+
+                oscillator.connect(volume);
+                volume.connect(clickAudioContext.destination);
+
+                oscillator.start(now);
+                oscillator.stop(now + 0.11);
+
+                oscillator.onended = () => {
+                    oscillator.disconnect();
+                    volume.disconnect();
+                };
+            };
+
+            if (clickAudioContext.state === "suspended") {
+                clickAudioContext.resume().then(play).catch(() => { });
+            } else {
+                play();
+            }
+        }
+
+        // ใช้ได้กับบัตรคำทั้งสองฝั่ง แม้กดเริ่มใหม่
+        document.addEventListener("click", function (event) {
+            const card = event.target.closest("button.card");
+
+            if (!card || card.disabled) return;
+
+            // ไม่เล่นเสียงขณะเกมกำลังตรวจคำตอบ
+            if (typeof locked !== "undefined" && locked) return;
+
+            playClickSound();
+        }, true);
+    </script>
+    <script>
+        let successAudioContext;
+
+        async function playSuccessSound() {
+            try {
+                const AudioContextClass =
+                    window.AudioContext || window.webkitAudioContext;
+
+                if (!AudioContextClass) return;
+
+                successAudioContext ??= new AudioContextClass();
+                await successAudioContext.resume();
+
+                const now = successAudioContext.currentTime;
+
+                // โน้ตไล่สูง ให้ความรู้สึกสำเร็จ
+                const notes = [523.25, 659.25, 783.99, 1046.5];
+
+                notes.forEach((frequency, index) => {
+                    const oscillator = successAudioContext.createOscillator();
+                    const volume = successAudioContext.createGain();
+
+                    const start = now + index * 0.1;
+                    const duration = index === notes.length - 1 ? 0.4 : 0.18;
+
+                    oscillator.type = "sine";
+                    oscillator.frequency.value = frequency;
+
+                    volume.gain.setValueAtTime(0, start);
+                    volume.gain.linearRampToValueAtTime(0.16, start + 0.015);
+                    volume.gain.exponentialRampToValueAtTime(
+                        0.0001, start + duration
+                    );
+
+                    oscillator.connect(volume);
+                    volume.connect(successAudioContext.destination);
+
+                    oscillator.start(start);
+                    oscillator.stop(start + duration + 0.02);
+
+                    oscillator.onended = () => {
+                        oscillator.disconnect();
+                        volume.disconnect();
+                    };
+                });
+            } catch (error) {
+                console.warn("ไม่สามารถเล่นเสียงได้", error);
+            }
+        }
+    </script>
+</body>
+
+</html>

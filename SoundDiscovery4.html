@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ด่าน 4 — จับคู่คำคล้องจองสองพยางค์</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            padding: 18px 12px;
+            color: #293b58;
+            background: #fff8ed url('background.png') center/cover fixed;
+            font-family: Kanit, Tahoma, sans-serif
+        }
+
+        button,
+        a {
+            font: inherit
+        }
+
+        main {
+            max-width: 980px;
+            margin: auto;
+            padding: 24px;
+            background: #fffaf0ed;
+            border: 2px solid white;
+            border-radius: 32px;
+            box-shadow: 0 12px 32px #58452b22
+        }
+
+        header {
+            text-align: center
+        }
+
+        .badge {
+            display: inline-block;
+            background: #fff0bd;
+            color: #80531c;
+            border-radius: 30px;
+            padding: 7px 18px
+        }
+
+        h1 {
+            color: #7040b6;
+            font-size: clamp(25px, 5vw, 36px);
+            margin: 12px 0
+        }
+
+        p {
+            margin: 6px 0;
+            line-height: 1.7
+        }
+
+        .tip {
+            font-size: 13px;
+            color: #59647a
+        }
+
+        .teacher {
+            display: block;
+            width: 140px;
+            height: auto;
+            margin: 6px auto
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0
+        }
+
+        .stat,
+        .restart {
+            background: #e9ddff;
+            border: 0;
+            border-radius: 18px;
+            padding: 11px 17px;
+            box-shadow: 4px 5px 9px #8060a822, inset 3px 3px 6px white, inset -3px -3px 6px #aa8cc333
+        }
+
+        .stat {
+            font-weight: 500
+        }
+
+        #message {
+            text-align: center;
+            min-height: 54px;
+            display: grid;
+            place-items: center;
+            font-size: 17px;
+            margin: 8px 0
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px
+        }
+
+        .label {
+            text-align: center;
+            color: #68758d;
+            margin: 0 0 10px
+        }
+
+        .list {
+            display: grid;
+            gap: 12px
+        }
+
+        .card,
+        .target {
+            min-height: 68px;
+            border-radius: 22px;
+            border: 2px solid transparent;
+            font-size: clamp(20px, 4vw, 28px);
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px;
+            color: #293b58
+        }
+
+        .card {
+            background: #dfedff;
+            box-shadow: 4px 5px 9px #6883ac22, inset 4px 4px 7px #ffffffdd, inset -4px -4px 7px #91afd144;
+            touch-action: none;
+            cursor: grab;
+            user-select: none
+        }
+
+        .target {
+            background: #ffe5ef;
+            box-shadow: 4px 5px 9px #aa708322, inset 4px 4px 7px #ffffffdd, inset -4px -4px 7px #daa3bc44;
+            flex-wrap: wrap;
+            gap: 6px;
+            cursor: pointer
+        }
+
+        .selected,
+        .over {
+            border-color: #8354c3;
+            background: #eee0ff
+        }
+
+        .matched {
+            background: #ddf5e5;
+            border-color: #58a278;
+            color: #286040;
+            box-shadow: inset 3px 3px 6px white;
+            cursor: default
+        }
+
+        .wrong {
+            border-color: #d95669;
+            background: #ffe0e5
+        }
+
+        .used {
+            visibility: hidden
+        }
+
+        .ghost {
+            position: fixed;
+            z-index: 1000;
+            pointer-events: none;
+            width: auto;
+            min-width: 130px;
+            opacity: .95;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 10px 24px #0003
+        }
+
+        .dragging {
+            opacity: .4
+        }
+
+        button:focus-visible,
+        a:focus-visible {
+            outline: 3px solid #8555c8;
+            outline-offset: 4px
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 22px
+        }
+
+        .restart {
+            cursor: pointer;
+            color: #563583
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px
+        }
+
+        .nav a {
+            padding: 10px 18px;
+            border: 1.5px solid #e7ac28;
+            border-radius: 14px;
+            text-decoration: none;
+            color: #6b249f;
+            background: #fffaf0
+        }
+
+        .nav .next {
+            background: #7525ac;
+            color: white;
+            box-shadow: 0 3px 0 #48166c
+        }
+
+        .foot {
+            text-align: center;
+            font-size: 12px;
+            color: #6c7381;
+            margin-top: 16px
+        }
+
+        @media(max-width:540px) {
+            main {
+                padding: 18px 10px
+            }
+
+            .board {
+                gap: 12px
+            }
+
+            .card,
+            .target {
+                padding: 9px 5px;
+                min-height: 64px
+            }
+
+            .stat {
+                font-size: 13px;
+                padding: 9px 11px
+            }
+
+            body {
+                background-attachment: scroll
+            }
+
+            .nav a {
+                font-size: 14px;
+                padding: 10px 12px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header><span class="badge">ภารกิจคำคล้องจอง • ด่าน 4</span>
+            <h1>จับคู่คำคล้องจองสองพยางค์</h1>
+            <p>ลากบัตรคำสีฟ้า ไปวางบนคำสีชมพูที่คล้องจองกัน</p>
+            <p class="tip">ฟังเสียงพยางค์ท้ายของคำหน้า กับพยางค์แรกของคำถัดไป เช่น การ<b>บ้าน</b>–<b>จาน</b>ข้าว</p>
+        </header>
+        <img class="teacher" src="teacher-student5.png" alt="" onerror="this.hidden=true">
+        <div class="stats"><span class="stat">⭐ สำเร็จ <span id="score">0</span>/10 คู่</span><span class="stat">🎯
+                ลองจับคู่ <span id="attempts">0</span> ครั้ง</span><span class="stat">⏱ <span
+                    id="time">00:00</span></span><button class="stat" id="sound" type="button" aria-pressed="true">🔊
+                เปิดเสียง</button></div>
+        <p id="message" role="status" aria-live="polite">พร้อมแล้ว ลากคำไปหาคู่ได้เลย!</p>
+        <section class="board" aria-label="จับคู่คำ">
+            <div>
+                <p class="label">บัตรคำที่ลากได้</p>
+                <div id="sources" class="list"></div>
+            </div>
+            <div>
+                <p class="label">วางบนคำที่คล้องจองกัน</p>
+                <div id="targets" class="list"></div>
+            </div>
+        </section>
+        <div class="actions"><button id="restart" class="restart" type="button">↻ เริ่มใหม่</button></div>
+        <nav class="nav" aria-label="เมนูเปลี่ยนหน้า"><a href="SoundDiscovery3.html">← ย้อนกลับ</a><a
+                href="index.html">กลับหน้าหลัก</a><a class="next" href="index.html">หน้าถัดไป →</a></nav>
+        <p class="foot">ใช้เมาส์หรือนิ้วลากได้ • หรือเลือกบัตรคำ แล้วแตะคำตอบ • คีย์บอร์ดใช้ Tab และ Enter</p>
+    </main>
+    <script>
+        // เปลี่ยนชุดคำได้ที่นี่: a คือบัตรที่ลาก b คือคำรับ และ x/y คือพยางค์สัมผัส
+        const pairs = [
+            { a: 'น้ำล้น', b: 'คนดี', x: 'ล้น', y: 'คน' },
+            { a: 'มะเฟือง', b: 'เหลืองดี', x: 'เฟือง', y: 'เหลือง' },
+            { a: 'กีวี่', b: 'สีเขียว', x: 'วี่', y: 'สี' },
+            { a: 'อ่านเขียน', b: 'เรียนดี', x: 'เขียน', y: 'เรียน' },
+            { a: 'ทุ่งนา', b: 'ผ้าห่ม', x: 'นา', y: 'ผ้า' },
+            { a: 'ความคิด', b: 'จิตใจ', x: 'คิด', y: 'จิต' },
+            { a: 'ต้นเงาะ', b: 'เหาะเหิน', x: 'เงาะ', y: 'เหาะ' },
+            { a: 'การบ้าน', b: 'จานข้าว', x: 'บ้าน', y: 'จาน' },
+            { a: 'เต้าหู้', b: 'รู้ใจ', x: 'หู้', y: 'รู้' },
+            { a: 'กำไล', b: 'ใบบัว', x: 'ไล', y: 'ใบ' }];
+        const $ = id => document.getElementById(id); let selected = null, score = 0, attempts = 0, start = 0, clock = null, drag = null, ghost = null, over = null, enabled = true, ctx = null, delayed = new Set();
+        function later(fn, ms) { const id = setTimeout(() => { delayed.delete(id); fn() }, ms); delayed.add(id) }
+        function shuffle(a) { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]] } return a }
+        function time() { const s = Math.floor((Date.now() - start) / 1000); $('time').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0') }
+        function begin() { if (!start) { start = Date.now(); clock = setInterval(time, 1000) } }
+        async function tone(win = false) { if (!enabled) return; try { ctx ??= new (window.AudioContext || window.webkitAudioContext)(); await ctx.resume(); const notes = win ? [523.25, 659.25, 783.99, 1046.5] : [650]; notes.forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + i * .095; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.12, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .22); o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + .24); o.onended = () => { o.disconnect(); g.disconnect() } }) } catch { } }
+        function choose(card) { if (card.disabled) return; document.querySelectorAll('.selected').forEach(e => { e.classList.remove('selected'); e.setAttribute('aria-pressed', 'false') }); selected = card; card.classList.add('selected'); card.setAttribute('aria-pressed', 'true'); begin() }
+        function match(card, target) { if (!card || card.disabled || target.disabled) return; begin(); attempts++; $('attempts').textContent = attempts; const id = Number(card.dataset.id), p = pairs[id]; if (card.dataset.id === target.dataset.id) { score++; $('score').textContent = score; card.disabled = true; card.classList.add('used'); card.classList.remove('selected'); card.setAttribute('aria-pressed', 'false'); target.disabled = true; target.classList.remove('wrong'); target.classList.add('matched'); target.textContent = p.a + ' – ' + p.b + ' ✓'; selected = null; tone(true); $('message').textContent = '✓ ' + p.a + '–' + p.b + ' : ' + p.x + ' สัมผัสกับ ' + p.y; if (score === pairs.length) { clearInterval(clock); time(); $('message').textContent = '🏆 ภารกิจสำเร็จ! ครบ ' + score + ' คู่ ลอง ' + attempts + ' ครั้ง ใช้เวลา ' + $('time').textContent } } else { target.classList.add('wrong'); $('message').textContent = 'ลองใหม่ค่ะ ฟังเสียงพยางค์ท้ายของคำหน้า กับพยางค์แรกของคำถัดไป'; later(() => target.classList.remove('wrong'), 650) } }
+        function cleanup() { if (drag) drag.card.classList.remove('dragging'); ghost?.remove(); ghost = null; over?.classList.remove('over'); over = null; drag = null }
+        function reset() { cleanup(); clearInterval(clock); delayed.forEach(clearTimeout); delayed.clear(); selected = null; score = attempts = start = 0; $('score').textContent = '0'; $('attempts').textContent = '0'; $('time').textContent = '00:00'; $('message').textContent = 'พร้อมแล้ว ลากคำไปหาคู่ได้เลย!'; $('sources').replaceChildren(); $('targets').replaceChildren(); for (const side of ['sources', 'targets']) for (const id of shuffle(pairs.map((_, i) => i))) { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.className = side === 'sources' ? 'card' : 'target'; b.textContent = side === 'sources' ? pairs[id].a : pairs[id].b; if (side === 'sources') { b.setAttribute('aria-pressed', 'false'); b.onclick = () => { choose(b); tone() }; b.onpointerdown = e => { if (b.disabled || e.button !== 0) return; choose(b); tone(); drag = { card: b, id: e.pointerId, x: e.clientX, y: e.clientY, moved: false }; b.setPointerCapture(e.pointerId) }; b.onpointermove = e => { if (!drag || e.pointerId !== drag.id) return; if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return; drag.moved = true; if (!ghost) { ghost = document.createElement('div'); ghost.className = 'card ghost'; ghost.textContent = b.textContent; ghost.setAttribute('aria-hidden', 'true'); document.body.append(ghost); b.classList.add('dragging') } ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px'; over?.classList.remove('over'); over = document.elementFromPoint(e.clientX, e.clientY)?.closest('.target:not(:disabled)'); over?.classList.add('over') }; b.onpointerup = e => { if (!drag || e.pointerId !== drag.id) return; const moved = drag.moved, target = document.elementFromPoint(e.clientX, e.clientY)?.closest('.target:not(:disabled)'); if (moved && target) match(b, target); cleanup(); if (moved) { b.onclick = null; later(() => { b.onclick = () => { choose(b); tone() } }, 0) } }; b.onpointercancel = cleanup; b.onlostpointercapture = () => { if (drag) cleanup() } } else b.onclick = () => { if (selected) match(selected, b); else $('message').textContent = 'เลือกบัตรคำสีฟ้าก่อนนะคะ' }; $(side).append(b) } }
+        $('restart').onclick = reset; $('sound').onclick = () => { enabled = !enabled; $('sound').textContent = enabled ? '🔊 เปิดเสียง' : '🔇 ปิดเสียง'; $('sound').setAttribute('aria-pressed', String(enabled)) }; reset();
+    </script>
+    <!-- เพลงพื้นหลัง เล่นวน -->
+    <audio id="backgroundMusic" src="bgmusic.mp3" loop preload="none"></audio>
+
+    <script>
+        const backgroundMusic = document.getElementById("backgroundMusic");
+
+        // ความดัง 10%
+        backgroundMusic.volume = 0.1;
+
+        function startBackgroundMusic() {
+            if (enabled && backgroundMusic.paused) {
+                backgroundMusic.play().catch(() => { });
+            }
+        }
+
+        // เริ่มเพลงเมื่อผู้เล่นแตะ คลิก หรือใช้คีย์บอร์ด
+        document.addEventListener("pointerdown", startBackgroundMusic);
+        document.addEventListener("keydown", startBackgroundMusic);
+
+        // ใช้ปุ่มเปิด–ปิดเสียงเดิม ควบคุมเพลงด้วย
+        document.getElementById("sound").addEventListener("click", () => {
+            if (enabled) {
+                startBackgroundMusic();
+            } else {
+                backgroundMusic.pause();
+            }
+        });
+
+        // หยุดเพลงเมื่อสลับออกจากหน้าเกม
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                backgroundMusic.pause();
+            } else {
+                startBackgroundMusic();
+            }
+        });
+    </script>
+</body>
+
+</html>
